@@ -1,10 +1,7 @@
 package com.railwayteam.railways.content.custom_tracks;
 
 import com.railwayteam.railways.mixin_interfaces.IHasTrackCasing;
-import com.railwayteam.railways.mixin_interfaces.IHasTrackMaterial;
 import com.railwayteam.railways.registry.CRTags;
-import com.railwayteam.railways.track_api.TrackMaterial;
-import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,19 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomTrackBlock extends TrackBlock implements IHasTrackMaterial { //TODO _track api
-
-  protected final TrackMaterial material;
-
-  public CustomTrackBlock(Properties properties, TrackMaterial material) {
-    super(properties);
-    this.material = material;
-  }
-
-  @Override
-  public TrackMaterial getMaterial() {
-    return this.material;
-  }
+public class CustomTrackBlock {
 
   @Nullable
   public static InteractionResult casingUse(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {

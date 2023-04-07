@@ -8,9 +8,8 @@ import com.railwayteam.railways.content.coupling.TrackCouplerDisplaySource;
 import com.railwayteam.railways.content.coupling.coupler.TrackCouplerBlock;
 import com.railwayteam.railways.content.coupling.coupler.TrackCouplerBlockItem;
 import com.railwayteam.railways.content.custom_bogeys.monobogey.MonoBogeyBlock;
-import com.railwayteam.railways.content.custom_tracks.CustomTrackBlock;
+import com.railwayteam.railways.content.custom_tracks.CRTrackMaterials;
 import com.railwayteam.railways.content.custom_tracks.CustomTrackBlockStateGenerator;
-import com.railwayteam.railways.track_api.TrackMaterial;
 import com.railwayteam.railways.content.custom_tracks.monorail.MonorailBlockStateGenerator;
 import com.railwayteam.railways.content.semaphore.SemaphoreBlock;
 import com.railwayteam.railways.content.semaphore.SemaphoreItem;
@@ -24,6 +23,8 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -35,6 +36,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -43,6 +45,9 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -53,13 +58,17 @@ public class CRBlocks {
 
     private static final CreateRegistrate REGISTRATE = Railways.registrate();
 
-    private static BlockEntry<CustomTrackBlock> makeTrack(TrackMaterial material) {
+    private static BlockEntry<TrackBlock> makeTrack(TrackMaterial material) {
         return makeTrack(material, new CustomTrackBlockStateGenerator()::generate);
     }
 
-    private static BlockEntry<CustomTrackBlock> makeTrack(TrackMaterial material,
-                                                          NonNullBiConsumer<DataGenContext<Block, CustomTrackBlock>, RegistrateBlockstateProvider> blockstateGen) {
-        return REGISTRATE.block("track_" + material.resName(), material::create)
+    private static BlockEntry<TrackBlock> makeTrack(TrackMaterial material,
+                                                    NonNullBiConsumer<DataGenContext<Block, TrackBlock>, RegistrateBlockstateProvider> blockstateGen) {
+        List<TagKey<Block>> trackTags = new ArrayList<>();
+        trackTags.add(AllTags.AllBlockTags.TRACKS.tag);
+        if (material.trackType != CRTrackMaterials.CRTrackType.MONORAIL)
+            trackTags.add(AllTags.AllBlockTags.GIRDABLE_TRACKS.tag);
+        return REGISTRATE.block("track_" + material.resourceName(), material::create)
             .initialProperties(Material.STONE)
             .properties(p -> p.color(MaterialColor.METAL)
                 .strength(0.8F)
@@ -69,7 +78,7 @@ public class CRBlocks {
             .transform(pickaxeOnly())
             .blockstate(blockstateGen)
             .tag(AllTags.AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
-            .tag(CRTags.AllBlockTags.TRACKS.tag) //TODO _track api
+            .tag((TagKey<Block>[]) trackTags.toArray(new TagKey[0])) // keep the cast, or stuff breaks
             .lang(material.langName + " Train Track")
             .item(TrackBlockItem::new)
             .model((c, p) -> p.generated(c, Railways.asResource("item/track/" + c.getName())))
@@ -160,16 +169,16 @@ public class CRBlocks {
             .transform(customItemModel("_", "block_both"))
             .register();
 
-    public static final BlockEntry<CustomTrackBlock> ACACIA_TRACK = makeTrack(TrackMaterial.ACACIA);
-    public static final BlockEntry<CustomTrackBlock> BIRCH_TRACK = makeTrack(TrackMaterial.BIRCH);
-    public static final BlockEntry<CustomTrackBlock> CRIMSON_TRACK = makeTrack(TrackMaterial.CRIMSON);
-    public static final BlockEntry<CustomTrackBlock> DARK_OAK_TRACK = makeTrack(TrackMaterial.DARK_OAK);
-    public static final BlockEntry<CustomTrackBlock> JUNGLE_TRACK = makeTrack(TrackMaterial.JUNGLE);
-    public static final BlockEntry<CustomTrackBlock> OAK_TRACK = makeTrack(TrackMaterial.OAK);
-    public static final BlockEntry<CustomTrackBlock> SPRUCE_TRACK = makeTrack(TrackMaterial.SPRUCE);
-    public static final BlockEntry<CustomTrackBlock> WARPED_TRACK = makeTrack(TrackMaterial.WARPED);
-    public static final BlockEntry<CustomTrackBlock> BLACKSTONE_TRACK = makeTrack(TrackMaterial.BLACKSTONE);
-    public static final BlockEntry<CustomTrackBlock> MONORAIL_TRACK = makeTrack(TrackMaterial.MONORAIL, new MonorailBlockStateGenerator()::generate);
+    public static final BlockEntry<TrackBlock> ACACIA_TRACK = makeTrack(CRTrackMaterials.ACACIA);
+    public static final BlockEntry<TrackBlock> BIRCH_TRACK = makeTrack(CRTrackMaterials.BIRCH);
+    public static final BlockEntry<TrackBlock> CRIMSON_TRACK = makeTrack(CRTrackMaterials.CRIMSON);
+    public static final BlockEntry<TrackBlock> DARK_OAK_TRACK = makeTrack(CRTrackMaterials.DARK_OAK);
+    public static final BlockEntry<TrackBlock> JUNGLE_TRACK = makeTrack(CRTrackMaterials.JUNGLE);
+    public static final BlockEntry<TrackBlock> OAK_TRACK = makeTrack(CRTrackMaterials.OAK);
+    public static final BlockEntry<TrackBlock> SPRUCE_TRACK = makeTrack(CRTrackMaterials.SPRUCE);
+    public static final BlockEntry<TrackBlock> WARPED_TRACK = makeTrack(CRTrackMaterials.WARPED);
+    public static final BlockEntry<TrackBlock> BLACKSTONE_TRACK = makeTrack(CRTrackMaterials.BLACKSTONE);
+    public static final BlockEntry<TrackBlock> MONORAIL_TRACK = makeTrack(CRTrackMaterials.MONORAIL, new MonorailBlockStateGenerator()::generate);
 
     public static final BlockEntry<MonoBogeyBlock> MONO_BOGEY =
         REGISTRATE.block("mono_bogey", p -> new MonoBogeyBlock(p, false))

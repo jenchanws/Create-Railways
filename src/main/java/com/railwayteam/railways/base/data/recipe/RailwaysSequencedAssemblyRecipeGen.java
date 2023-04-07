@@ -1,13 +1,14 @@
 package com.railwayteam.railways.base.data.recipe;
 
 import com.railwayteam.railways.Railways;
-import com.railwayteam.railways.track_api.TrackMaterial;
+import com.railwayteam.railways.content.custom_tracks.CRTrackMaterials;
 import com.railwayteam.railways.registry.CRItems;
 import com.railwayteam.railways.util.TextUtils;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -48,10 +49,10 @@ public class RailwaysSequencedAssemblyRecipeGen extends RailwaysRecipeProvider {
       ));
     }
 
-    for (TrackMaterial material : TrackMaterial.allCustom(Railways.MODID)) { //TODO _track api (nope, doesn't fit as much)
+    for (TrackMaterial material : TrackMaterial.allCustom(Railways.MODID)) {
       if (material.railsIngredient.isEmpty() || material.sleeperIngredient.isEmpty()) continue;
 
-      TRACKS.put(material, create("track_" + material.resName(), b -> b.require(material.sleeperIngredient)
+      TRACKS.put(material, create("track_" + material.resourceName(), b -> b.require(material.sleeperIngredient)
           .transitionTo(CRItems.ITEM_INCOMPLETE_TRACK.get(material).get())
           .addOutput(material.getTrackBlock().get(), 1)
           .loops(1)
@@ -61,9 +62,9 @@ public class RailwaysSequencedAssemblyRecipeGen extends RailwaysRecipeProvider {
       ));
     }
 
-    TRACKS.put(TrackMaterial.MONORAIL, create("track_monorail", b -> b.require(Ingredients.girder())
-        .transitionTo(CRItems.ITEM_INCOMPLETE_TRACK.get(TrackMaterial.MONORAIL).get())
-        .addOutput(new ItemStack(TrackMaterial.MONORAIL.getTrackBlock().get(), 6), 1)
+    TRACKS.put(CRTrackMaterials.MONORAIL, create("track_monorail", b -> b.require(Ingredients.girder())
+        .transitionTo(CRItems.ITEM_INCOMPLETE_TRACK.get(CRTrackMaterials.MONORAIL).get())
+        .addOutput(new ItemStack(CRTrackMaterials.MONORAIL.getTrackBlock().get(), 6), 1)
         .loops(1)
         .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Ingredients.metalBracket()))
         .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Ingredients.ironSheet()))
