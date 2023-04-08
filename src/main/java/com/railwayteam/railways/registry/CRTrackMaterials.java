@@ -1,9 +1,8 @@
-package com.railwayteam.railways.content.custom_tracks;
+package com.railwayteam.railways.registry;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.railwayteam.railways.Railways;
 import com.railwayteam.railways.content.custom_tracks.monorail.MonorailTrackBlock;
-import com.railwayteam.railways.registry.CRBlocks;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -12,7 +11,7 @@ import net.minecraftforge.common.util.Lazy;
 
 import static com.simibubi.create.content.logistics.trains.TrackMaterialFactory.make;
 
-public class CRTrackMaterials {
+public class CRTrackMaterials { // must be registered early so that incomplete track items can be created
     public static final TrackMaterial
         ACACIA = make(Railways.asResource("acacia"))
             .lang("Acacia")
@@ -100,4 +99,6 @@ public class CRTrackMaterials {
             super(id, factory);
         }
     }
+
+    public static void register() {}
 }

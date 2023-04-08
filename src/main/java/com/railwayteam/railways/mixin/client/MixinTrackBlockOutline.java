@@ -3,10 +3,9 @@ package com.railwayteam.railways.mixin.client;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.railwayteam.railways.track_api.TrackMaterial;
+import com.railwayteam.railways.registry.CRTrackMaterials;
 import com.railwayteam.railways.content.custom_tracks.monorail.MonorailTrackBlock;
 import com.railwayteam.railways.content.custom_tracks.monorail.MonorailTrackVoxelShapes;
-import com.railwayteam.railways.mixin_interfaces.IHasTrackMaterial;
 import com.railwayteam.railways.registry.CRShapes;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.track.*;
@@ -66,7 +65,7 @@ public abstract class MixinTrackBlockOutline {
     @Inject(method = "pickCurves", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/logistics/trains/BezierConnection;getStepLUT()[F"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void storeIsMonorail(CallbackInfo ci, Minecraft mc, LocalPlayer player, Vec3 origin, double maxRange, AttributeInstance range,
                                         Vec3 target, Map turns, Iterator var8, TrackTileEntity te, Iterator var10, BezierConnection bc, AABB bounds) {
-        if (((IHasTrackMaterial) bc).getMaterial().trackType == TrackMaterial.TrackType.MONORAIL)
+        if (bc.getMaterial().trackType == CRTrackMaterials.CRTrackType.MONORAIL)
             tmpCurveIsMonorail = true;
     }
 
@@ -79,7 +78,7 @@ public abstract class MixinTrackBlockOutline {
 
     @Inject(method = "pickCurves", at = @At(value = "FIELD", target = "Lcom/simibubi/create/content/logistics/trains/track/TrackBlockOutline;result:Lcom/simibubi/create/content/logistics/trains/track/TrackBlockOutline$BezierPointSelection;", opcode = Opcodes.PUTSTATIC, ordinal = 1), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void storeIsMonorailPersistent(CallbackInfo ci, Minecraft mc, LocalPlayer player, Vec3 origin, double maxRange, AttributeInstance range, Vec3 target, Map turns, Iterator var8, TrackTileEntity te, Iterator var10, BezierConnection bc) {
-        persistentCurveIsMonorail = ((IHasTrackMaterial) bc).getMaterial().trackType == TrackMaterial.TrackType.MONORAIL;
+        persistentCurveIsMonorail = bc.getMaterial().trackType == CRTrackMaterials.CRTrackType.MONORAIL;
     }
 
     @Redirect(method = "drawCurveSelection", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/utility/VoxelShaper;get(Lnet/minecraft/core/Direction;)Lnet/minecraft/world/phys/shapes/VoxelShape;"))

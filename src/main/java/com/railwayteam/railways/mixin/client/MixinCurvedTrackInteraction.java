@@ -1,8 +1,7 @@
 package com.railwayteam.railways.mixin.client;
 
-import com.railwayteam.railways.track_api.TrackMaterial;
+import com.railwayteam.railways.registry.CRTrackMaterials;
 import com.railwayteam.railways.content.custom_tracks.casing.SlabUseOnCurvePacket;
-import com.railwayteam.railways.mixin_interfaces.IHasTrackMaterial;
 import com.railwayteam.railways.registry.CRPackets;
 import com.railwayteam.railways.registry.CRTags;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
@@ -30,7 +29,7 @@ public abstract class MixinCurvedTrackInteraction {
                                       TrackBlockOutline.BezierPointSelection result, Minecraft mc, LocalPlayer player,
                                       ClientLevel level, ItemStack heldItem) {
     if (result.te().getConnections() == null || !result.te().getConnections().containsKey(result.loc().curveTarget()) ||
-        ((IHasTrackMaterial) result.te().getConnections().get(result.loc().curveTarget())).getMaterial().trackType != TrackMaterial.TrackType.MONORAIL) {
+        (result.te().getConnections().get(result.loc().curveTarget())).getMaterial().trackType != CRTrackMaterials.CRTrackType.MONORAIL) {
       if (heldItem.isEmpty() || heldItem.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SlabBlock slabBlock &&
           !CRTags.AllBlockTags.TRACK_CASING_BLACKLIST.matches(slabBlock)) {
         CRPackets.channel.sendToServer(new SlabUseOnCurvePacket(result.te()

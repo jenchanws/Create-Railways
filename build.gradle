@@ -104,6 +104,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven {
         url "https://maven.tterrag.com/"
+        content {
+            //FIXME temp
+            excludeGroupByRegex "com\\.simibubi.*"
+        }
     }
     maven {
         url "https://www.cursemaven.com"
@@ -124,13 +128,18 @@ repositories {
         name = "JourneyMap (Public)"
         url = "https://jm.gserv.me/repository/maven-public/"
     }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
 //    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all") { transitive = false }
-    implementation fg.deobf(files('libs/create-1.18.2-0.5.0.j-deobf.jar')) //FIXME this is temporary
+    //implementation files('libs/create-1.18.2-0.5.0.j-deobf.jar') //FIXME this is temporary
+    implementation fg.deobf("com.simibubi.create:create-1.18.2-0.5.0.j:all") { transitive = false }
+    //runtimeOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") //FIXME this is temporary - deobf jar doesn't have registrate jar-in-jar'ed
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     compileOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 

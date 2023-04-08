@@ -56,9 +56,6 @@ public class CRTags {
     TRACK_CASING_BLACKLIST(MOD,MOD.optionalDefault,false),
     ;
 
-    @Deprecated(forRemoval = true)
-    public static final AllTags.AllBlockTags TRACKS = AllTags.AllBlockTags.TRACKS;
-
     public final TagKey<Block> tag;
 
 

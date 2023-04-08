@@ -8,6 +8,7 @@ public class ModSetup {
   }
 
   public static void register() {
+    CRTrackMaterials.register();
     CRItems.register();
     CRBlockEntities.register();
     CRBlocks.register();

@@ -1,8 +1,8 @@
 package com.railwayteam.railways.content.custom_tracks;
 
 import com.railwayteam.railways.Railways;
-import com.railwayteam.railways.mixin_interfaces.IHasTrackMaterial;
-import com.railwayteam.railways.track_api.TrackMaterial;
+import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
@@ -37,7 +37,7 @@ public class CustomTrackBlockStateGenerator extends SpecialBlockStateGen {
       return prov.models()
           .getExistingFile(prov.mcLoc("block/air"));
     }
-    String prefix = "block/track/" + material.resName() + "/";
+    String prefix = "block/track/" + material.resourceName() + "/";
     Map<String, String> textureMap = new HashMap<>();//prefix + get() + material.resName()
     switch (value) {
       case TE, TN, TS, TW -> {
@@ -71,14 +71,14 @@ public class CustomTrackBlockStateGenerator extends SpecialBlockStateGen {
               Railways.asResource("block/track_base/" + value.getModel()))
         .texture("particle", material.particle);
     for (String k : textureMap.keySet()) {
-      builder = builder.texture(k, Railways.asResource(prefix + textureMap.get(k) + material.resName()));
+      builder = builder.texture(k, Railways.asResource(prefix + textureMap.get(k) + material.resourceName()));
     }
     for (String k : new String[]{"segment_left", "segment_right", "tie"}) {
       prov.models()
           .withExistingParent(prefix + k,
               Railways.asResource("block/track_base/" + k))
-          .texture("1", prefix + "standard_track_" + material.resName())
-          .texture("2", prefix + "standard_track_mip_" + material.resName())
+          .texture("1", prefix + "standard_track_" + material.resourceName())
+          .texture("2", prefix + "standard_track_mip_" + material.resourceName())
           .texture("particle", material.particle);
     }
     return builder;
