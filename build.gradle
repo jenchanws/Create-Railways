@@ -41,7 +41,7 @@ if (System.getenv("DEV") == "true") {
 if (System.getenv("CI") == "true") {
     version = "${minecraft_version}-nightly-${getGitHash()}"
 }
-group = 'com.github.spirolateral.railway' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'com.railwayteam.railways' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Steam_Rails"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
